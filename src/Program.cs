@@ -3,6 +3,7 @@ using Azure.Monitor.OpenTelemetry.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using OpenTelemetry;
 using OpenTelemetry.Trace;
+using OrderService.Configuration;
 using OrderService.Data;
 using OrderService.Domain;
 using OrderService.Messaging;
@@ -32,6 +33,11 @@ builder.Services.AddDbContext<OrdersDbContext>(opt =>
 builder.Services.AddSingleton(_ =>
     new ServiceBusClient(builder.Configuration.GetConnectionString("ServiceBus")));
 builder.Services.AddSingleton<IEventPublisher, ServiceBusEventPublisher>();
+
+// Bind VNPay settings. Non-secret defaults come from appsettings.json; TmnCode and
+// HashSecret are overridden via env vars (VNPay__TmnCode, VNPay__HashSecret) or user-secrets.
+builder.Services.Configure<VNPayOptions>(
+    builder.Configuration.GetSection(VNPayOptions.SectionName));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
