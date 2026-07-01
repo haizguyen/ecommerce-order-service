@@ -23,6 +23,16 @@ public class OrderProcessorTests
         Assert.NotEqual(Guid.Empty, order.Id);
     }
 
+    [Fact]
+    public void Place_NewOrder_DefaultsPaymentStatusToPending()
+    {
+        var request = new PlaceOrderRequest("SKU-001", 1);
+
+        var (order, _) = OrderProcessor.Place(request, DateTimeOffset.UtcNow);
+
+        Assert.Equal(PaymentStatus.Pending, order.PaymentStatus);
+    }
+
     [Theory]
     [InlineData("", 1)]
     [InlineData("  ", 1)]

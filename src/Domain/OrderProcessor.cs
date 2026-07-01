@@ -20,7 +20,8 @@ public static class OrderProcessor
             Id = Guid.NewGuid(),
             Sku = request.Sku,
             Quantity = request.Quantity,
-            CreatedAt = now
+            CreatedAt = now,
+            PaymentStatus = PaymentStatus.Pending
         };
 
         var @event = new OrderPlaced
