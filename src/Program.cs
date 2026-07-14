@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using OpenTelemetry;
 using OpenTelemetry.Trace;
 using OrderService.Data;
+using OrderService.Diagnostics;
 using OrderService.Domain;
 using OrderService.Messaging;
 
@@ -49,6 +50,11 @@ if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "E2E")
 }
 
 app.MapGet("/health", () => Results.Ok(new { status = "healthy" }));
+
+app.MapGet("/diagnostics/info", () =>
+    Results.Ok(new { serviceName = DiagnosticsInfo.ServiceName, currentUtc = DiagnosticsInfo.GetCurrentUtc() }));
+
+app.MapGet("/diagnostics/ping", () => Results.Text("pong", "text/plain"));
 
 app.MapPost("/orders", async (PlaceOrderRequest request, OrdersDbContext db, IEventPublisher publisher) =>
 {
