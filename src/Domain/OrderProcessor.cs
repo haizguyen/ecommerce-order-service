@@ -20,6 +20,10 @@ public static class OrderProcessor
             Id = Guid.NewGuid(),
             Sku = request.Sku,
             Quantity = request.Quantity,
+            Name = request.Name,
+            UnitPrice = request.UnitPrice,
+            Currency = request.Currency,
+            Status = "placed",
             CreatedAt = now
         };
 

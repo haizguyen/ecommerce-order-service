@@ -69,6 +69,24 @@ app.MapPost("/orders", async (PlaceOrderRequest request, OrdersDbContext db, IEv
     return Results.Created($"/orders/{order.Id}", new { order.Id, order.Sku, order.Quantity });
 });
 
+app.MapGet("/orders", async (OrdersDbContext db) =>
+{
+    var orders = await db.Orders.OrderByDescending(o => o.CreatedAt).ToListAsync();
+    var result = orders.Select(o => new
+    {
+        id = o.Id.ToString(),
+        status = o.Status,
+        placedAt = o.CreatedAt.ToString("o"),
+        lines = new[]
+        {
+            new { sku = o.Sku, name = o.Name, quantity = o.Quantity, unitPrice = o.UnitPrice }
+        },
+        total = o.UnitPrice * o.Quantity,
+        currency = o.Currency
+    });
+    return Results.Ok(result);
+});
+
 app.MapGet("/orders/{id:guid}", async (Guid id, OrdersDbContext db) =>
 {
     var order = await db.Orders.FindAsync(id);
