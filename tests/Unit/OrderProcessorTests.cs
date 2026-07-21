@@ -61,6 +61,11 @@ public class OrderProcessorTests
     [InlineData("  ", 1, "Widget", 10.0, "AUD")]
     [InlineData("SKU-001", 0, "Widget", 10.0, "AUD")]
     [InlineData("SKU-001", -2, "Widget", 10.0, "AUD")]
+    [InlineData("SKU-001", 1, "", 10.0, "AUD")]
+    [InlineData("SKU-001", 1, "  ", 10.0, "AUD")]
+    [InlineData("SKU-001", 1, "Widget", 10.0, "")]
+    [InlineData("SKU-001", 1, "Widget", 10.0, "  ")]
+    [InlineData("SKU-001", 1, "Widget", -1.0, "AUD")]
     public void Place_RejectsInvalidRequests(string sku, int quantity, string name, decimal unitPrice, string currency)
     {
         var request = new PlaceOrderRequest(sku, quantity, name, unitPrice, currency);

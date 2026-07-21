@@ -14,6 +14,12 @@ public static class OrderProcessor
             throw new ArgumentException("Sku is required", nameof(request));
         if (request.Quantity <= 0)
             throw new ArgumentException("Quantity must be positive", nameof(request));
+        if (string.IsNullOrWhiteSpace(request.Name))
+            throw new ArgumentException("Name is required", nameof(request));
+        if (string.IsNullOrWhiteSpace(request.Currency))
+            throw new ArgumentException("Currency is required", nameof(request));
+        if (request.UnitPrice < 0)
+            throw new ArgumentException("UnitPrice must be non-negative", nameof(request));
 
         var order = new Order
         {
